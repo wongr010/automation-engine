@@ -2,6 +2,8 @@ const fs = require('fs');
 const username=require('./auth').username;
 const password=require('./auth').password;
 
+var numVisible=0;
+
 const dictionary={ //element to identifying class
   "action bar button": ".button", //these are in carousel
   "action bar buttons": ".button",
@@ -27,7 +29,10 @@ function initTestFile(){
         '})\n\n');
 }
 
-
+function setActionBarVisible(numVis){
+  console.log("hello");
+  numVisible=numVis;
+}
 
 function createTestFile(action, actionItem, actionIdentifier, responseItem, responseIdentifier, testNo) {
 
@@ -50,7 +55,7 @@ function createTestFile(action, actionItem, actionIdentifier, responseItem, resp
         testString=testString.concat('\t\tconsole.trace();\n');
         testString=testString.concat('\t}\n\n');
 
-        testString=testString.concat(`\tfor (var i=0; i<numClicks-2; i++){\n`);
+        testString=testString.concat(`\tfor (var i=0; i<numClicks-${numVisible}; i++){\n`);
         testString=testString.concat("\t\tawait t\n");
         testString=testString.concat("\t\t\t.click(Selector(\'.carousel__next-button\'))\n");
         testString=testString.concat("\t}");
@@ -79,5 +84,6 @@ function createTestFile(action, actionItem, actionIdentifier, responseItem, resp
 
 module.exports={
   createTestFile: createTestFile,
-  initTestFile: initTestFile
+  initTestFile: initTestFile,
+  setActionBarVisible: setActionBarVisible
 };
