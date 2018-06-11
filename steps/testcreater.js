@@ -1,4 +1,6 @@
 const fs = require('fs');
+const username=require('./auth').username;
+const password=require('./auth').password;
 
 const dictionary={ //element to identifying class
   "action bar button": ".button", //these are in carousel
@@ -20,8 +22,8 @@ function initTestFile(){
         '.page `https://d11a9vijqilt7q.cloudfront.net/`\n'+
 
         '.httpAuth({\n'+
-          'username: "liquid",\n'+
-          'password: "studio",\n'+
+          `username: "${username}",\n`+
+          `password: "${password}",\n`+
         '})\n\n');
 }
 
@@ -29,7 +31,7 @@ function initTestFile(){
 
 function createTestFile(action, actionItem, actionIdentifier, responseItem, responseIdentifier, testNo) {
 
-    var testString="\t";
+    var testString="";
     var expectString="\n\t\t";
     var actionElement=dictionary[actionItem];
     var testTitle="test"+testNo.toString();
@@ -41,10 +43,17 @@ function createTestFile(action, actionItem, actionIdentifier, responseItem, resp
 
     if (action==="click"){
       if (actionItem==="action bar button"){
-        testString=testString.concat(`for (var i=0; i<actionbarNavigator('${actionElement}')-2; i++){\n`);
+        testString=testString.concat('\tvar numClicks=0;\n');
+        testString=testString.concat('\ttry{\n');
+        testString=testString.concat(`\t\tnumClicks=await actionbarNavigator('${actionIdentifier}');\n`);
+        testString=testString.concat('\t} catch(error) {\n');
+        testString=testString.concat('\t\tconsole.trace();\n');
+        testString=testString.concat('\t}\n\n');
+
+        testString=testString.concat(`\tfor (var i=0; i<numClicks-2; i++){\n`);
         testString=testString.concat("\t\tawait t\n");
-        testString=testString.concat("\t\t.click(Selector(\'.carousel__next-button\'))\n");
-        testString=testString.concat("}");
+        testString=testString.concat("\t\t\t.click(Selector(\'.carousel__next-button\'))\n");
+        testString=testString.concat("\t}");
 
 
         }
