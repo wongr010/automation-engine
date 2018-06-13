@@ -25,14 +25,29 @@ export async function findMatchingBubbleNo(text){
 	for (var i=0; i<widget_count; i++){
 		const widget=bubbles.find('div').findReact('t').nth(i);
 		const props=await widget.getReact();
-		const extract=JSON.stringify(props, null, 2);
-		const parsed=JSON.parse(extract);
-		console.log(JSON.stringify(parsed['props']['widgetDSL']['data']['text']));
-		if (JSON.stringify(parsed['props']['widgetDSL']['data']['text'])==='"'+text+'"'){ //a bit too hard coded rn
+		// const extract=JSON.stringify(props, null, 2);
+		// const parsed=JSON.parse(extract);
+		console.log(JSON.stringify(props['props']['widgetDSL']['data']['text']));
+		if (JSON.stringify(props['props']['widgetDSL']['data']['text'])==='"'+text+'"'){ //a bit too hard coded rn
 			console.log(i);
 			return i;
 		}
 	}
 
 	return i;
+}
+
+export async function findMatchingButtonNo(label){
+	  const widgetTracker=ReactSelector('t div div').find('.chat-window__content__chat-buttons').findReact('t').withProps({className: 'carousel--button'});
+		const props=await widgetTracker.getReact();
+		const widgetNo=props['props']['widgets'].length;
+
+		for (var i=0; i<widgetNo; i++){
+			if (JSON.stringify(props['props']['widgets'][i]['data']['action'])==='"'+label+'"'){
+				console.log(i);
+				return i;
+			}
+		}
+
+		return i;
 }
