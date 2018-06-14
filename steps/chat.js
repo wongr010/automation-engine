@@ -50,7 +50,8 @@ Then(/^I should see (.*) with (.*)$/, function(arg1, arg2){
 })
 
 AfterAll(function(){
-  const child=spawn("powershell.exe", ["c:\\Users\\rosalyn.wong\\Documents\\Maple_tester\\testscripts\\testscript.ps1"]);
+
+  const child=spawn("powershell.exe", [__dirname+"//testscript.ps1"]);
   child.stdout.on("data",(data)=>{
     console.log("\tTest Result: " + data.toString());
   });

@@ -1,1 +1,0 @@
-testcafe chrome test.js
