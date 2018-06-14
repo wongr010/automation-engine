@@ -51,3 +51,44 @@ export async function findMatchingButtonNo(label){
 
 		return i;
 }
+
+export async function findMatchingDetailChip(label){
+
+	var count_groups= await ReactSelector('t div div').find('.chat-window__content').find('.chat-bubble__bubble-proper').count; //use this always right before 'count' will be used. It's always off by 1
+
+	const bubbles=ReactSelector('t div div').find('.chat-window__content').find('.chat-bubble__bubble-proper').nth(count_groups-1);
+	const chips=bubbles.findReact('t').nth(0).findReact('t').nth(1); //this means that there should only be 1 bubble before the chip group
+	const props=await chips.getReact();
+
+	const widgetNo=props['props']['widgets'].length;
+
+	for (var i=0; i<widgetNo; i++){
+		if (JSON.stringify(props['props']['widgets'][i]['data']['title'])==='"'+label+'"'){
+			console.log(i);
+			break;
+		}
+	}
+
+	return chips.find('li').nth(i).getReact('t');
+
+}
+
+export async function findMatchingInfoChip(text){
+	var count_groups= await ReactSelector('t div div').find('.chat-window__content').find('.chat-bubble__bubble-proper').count; //use this always right before 'count' will be used. It's always off by 1
+
+	const bubbles=ReactSelector('t div div').find('.chat-window__content').find('.chat-bubble__bubble-proper').nth(count_groups-1);
+	const chips=bubbles.findReact('t').nth(0).findReact('t').nth(1); //this means that there should only be 1 bubble before the chip group
+	const props=await chips.getReact();
+
+	const widgetNo=props['props']['widgets'].length;
+
+	for (var i=0; i<widgetNo; i++){
+		var action=(JSON.stringify(props['props']['widgets'][i]['action'])).toLowerCase(); //would have used 'title' but the phone number widget has no such attribute
+		if (action.includes(text.toLowerCase())){
+			console.log(i);
+			break;
+		}
+	}
+	return i;
+	//return chips.find('li').nth(i).getReact('t');
+}
