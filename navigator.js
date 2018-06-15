@@ -21,21 +21,21 @@ export async function actionbarNavigator(label){
 
 export async function findMatchingBubble(text){
 	const count_groups=await ReactSelector('t div div').find('.chat-window__content').find('.chat-bubble__bubble-proper').count;
+	console.log(count_groups);
 	const bubbles=ReactSelector('t div div').find('.chat-window__content').find('.chat-bubble__bubble-proper').nth(count_groups-1);
-	const widget_count=await bubbles.find('div').findReact('t').withProps({name: "text"}).count;
+	const widget_count=await bubbles.findReact('t').find('.textBubble').count;
+
 
 	for (var i=0; i<widget_count; i++){
-		const widget=bubbles.find('div').findReact('t').nth(i);
+		const widget=bubbles.findReact('t').find('.textBubble').nth(i).findReact('t');
 		const props=await widget.getReact();
+		if (JSON.stringify(props['props']['data'])==='"'+text+'"'){ //a bit too hard coded rn
 
-		console.log(JSON.stringify(props['props']['widgetDSL']['data']['text']));
-		if (JSON.stringify(props['props']['widgetDSL']['data']['text'])==='"'+text+'"'){ //a bit too hard coded rn
-			console.log(i);
 			break;
 		}
 	}
 
-	return bubbles.find('div').findReact('t').withProps({name: "text"}).nth(i);
+	return bubbles.findReact('t').find('.textBubble').nth(i);
 }
 
 export async function findMatchingButtonNo(label){
